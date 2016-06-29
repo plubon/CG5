@@ -1,4 +1,5 @@
 import numpy as np
+from math import fabs
 
 
 class Triangle:
@@ -16,3 +17,11 @@ class Triangle:
             return True
         else:
             return False
+
+    def getBestScaleVertex(self, i):
+        ret = self.v1;
+        if(fabs(ret.p1[i])<fabs(self.v2.p1[i])):
+            ret = self.v2
+        if (fabs(ret.p1[i]) < fabs(self.v3.p1[i])):
+            ret = self.v3
+        return ret

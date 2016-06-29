@@ -14,3 +14,5 @@ class Vertex:
         cam = np.dot(camMat.matrix, np.array(self.point))
         self.p2 = np.dot(projMat.matrix, cam)
         self.p1 = np.divide(self.p2, self.p2[3])
+
+

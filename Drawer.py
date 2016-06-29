@@ -2,6 +2,7 @@ from Sphere import Sphere
 from CameraMatrix import CameraMatrix
 from ProjectionMatrix import ProjectionMatrix
 from ActiveEdgeTable import ActiveEdgeTable
+import numpy as np
 import math
 
 class Drawer:
@@ -15,15 +16,21 @@ class Drawer:
         self.point = None
         self.points = None
         self.triangles = None
+        self.currTriangle = None
+        self.texture = None
+        self.pixels = None
         self.color = (174,198,207)
 
-    def draw(self):
-        self.sphere = Sphere(300, 10, 10)
+    def draw(self, photo, pixels):
+        self.pixels = pixels
+        self.texture = photo
+        self.sphere = Sphere(500, 20, 20)
         self.camMat = CameraMatrix((700, 1, 1), (1, 1, 1))
         self.projMat = ProjectionMatrix(math.pi * (2.0 / 3.0), 1024 / 768, 100, 1000)
         self.sphere.transform(self.camMat, self.projMat)
         self.triangles = self.sphere.getTriangles()
         for triangle in self.triangles:
+            self.currTriangle = triangle
             self.getpoints(triangle)
             self.sorted = sorted(self.points, key=lambda tup: tup[1], reverse=True)
             self.fill()
@@ -38,8 +45,32 @@ class Drawer:
         self.points=((x1,y1), (x2,y2), (x3,y3))
 
 
+    def interpolate(self, p):
+        p1 = (p[0]/float(512)-1, 1-(p[1]/float(384)))
+        xVertex = self.currTriangle.getBestScaleVertex(0)
+        yVertex = self.currTriangle.getBestScaleVertex(1)
+        xscale =float(xVertex.t[0])/float(xVertex.p1[0])
+        yscale =float(yVertex.t[1])/float(yVertex.p1[1])
+        x = p1[0] * xscale
+        y = p1[1] * yscale
+        imgX = x*(self.texture.size[0])
+        if(imgX == self.texture.size[0]):
+            imgX -= 1
+        imgY = (y*self.texture.size[1])
+        if (imgY == self.texture.size[1]):
+            imgY -= 1
+        return int(imgX), int(imgY)
+
+
     def putpixel(self, x, y, val):
-        self.raster.put('#%02x%02x%02x' % val, (x, y))
+        p = self.interpolate((x, y))
+        try:
+            r,g,b = self.pixels[p[0], p[1]]
+        except IndexError:
+            r = 127
+            g = 127
+            b = 127
+        self.raster.put('#%02x%02x%02x' % (r,g,b), (x, y))
 
     def fill(self):
         n = len(self.points)

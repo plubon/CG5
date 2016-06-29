@@ -12,6 +12,7 @@ class MainWindow(Tk.Tk):
 
     def __init__(self):
         Tk.Tk.__init__(self)
+        self.filechooseoptions = self.getfilechooseoptions()
         self.currentFileName = None
         self.imageLabel = None
         self.photo = None
@@ -22,7 +23,16 @@ class MainWindow(Tk.Tk):
         self.raster = None
         self.sphere = None
         self.drawer = None
+        self.pixels = None
         self.initialize()
+
+    def getfilechooseoptions(self):
+        options = {}
+        options['defaultextension'] = '.jpg'
+        options['filetypes'] = [('jpg files', '.jpg'), ('all files', '.*')]
+        options['initialdir'] = 'C:\\'
+        options['title'] = 'Choose an image'
+        return options
 
     def initialize(self):
         self.title = "CGP5"
@@ -35,11 +45,14 @@ class MainWindow(Tk.Tk):
         self.botpanel = Tk.Frame(self)
         self.botpanel.pack()
         Tk.Button(self.toppanel, text="Choose an image", command=self.fileselecthandler).pack(side=Tk.LEFT)
+        Tk.Button(self.toppanel, text="Draw", command=self.draw).pack(side=Tk.LEFT)
         self.imageLabel = Tk.Label(self.botpanel)
         self.imageLabel.pack()
         self.drawer = Drawer(self.raster)
-        self.drawer.draw()
         self.mainloop()
+
+    def draw(self):
+        self.drawer.draw(self.photo, self.pixels)
 
     def fileselecthandler(self):
         self.currentFileName = tkFileDialog.askopenfilename(**self.filechooseoptions)
@@ -48,7 +61,8 @@ class MainWindow(Tk.Tk):
 
     def loadimage(self):
         self.manager.loadimage(self.currentFileName)
-        self.photo = ImageTk.PhotoImage(self.manager.image)
+        self.photo = self.manager.image
+        self.pixels = self.manager.raster
 
     def drawimage(self):
         if self.photo is None and self.imageLabel is None:
