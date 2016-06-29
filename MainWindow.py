@@ -2,13 +2,13 @@ import Tkinter as Tk
 import tkFileDialog
 from ImageManager import ImageManager
 from PIL import ImageTk
-from Sphere import Sphere
+from Drawer import Drawer
 
 
 class MainWindow(Tk.Tk):
 
-    WIDTH = 1024;
-    HEIGHT = 768;
+    WIDTH = 1024
+    HEIGHT = 768
 
     def __init__(self):
         Tk.Tk.__init__(self)
@@ -21,6 +21,7 @@ class MainWindow(Tk.Tk):
         self.canvas = None
         self.raster = None
         self.sphere = None
+        self.drawer = None
         self.initialize()
 
     def initialize(self):
@@ -36,7 +37,8 @@ class MainWindow(Tk.Tk):
         Tk.Button(self.toppanel, text="Choose an image", command=self.fileselecthandler).pack(side=Tk.LEFT)
         self.imageLabel = Tk.Label(self.botpanel)
         self.imageLabel.pack()
-        self.sphere = Sphere(300, 10, 10)
+        self.drawer = Drawer(self.raster)
+        self.drawer.draw()
         self.mainloop()
 
     def fileselecthandler(self):
