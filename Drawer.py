@@ -26,7 +26,7 @@ class Drawer:
         self.texture = photo
         self.sphere = Sphere(500, 20, 20)
         self.camMat = CameraMatrix((700, 1, 1), (1, 1, 1))
-        self.projMat = ProjectionMatrix(math.pi * (2.0 / 3.0), 1024 / 768, 100, 1000)
+        self.projMat = ProjectionMatrix(math.pi * (2.0 / 3.0), 800 / 600, 100, 1000)
         self.sphere.transform(self.camMat, self.projMat)
         self.triangles = self.sphere.getTriangles()
         for triangle in self.triangles:
@@ -36,17 +36,17 @@ class Drawer:
             self.fill()
 
     def getpoints(self, tr):
-        x1 = int((tr.v1.p1[0])*512+512)
-        y1 = int(-(tr.v1.p1[1])*384+384)
-        x2 = int((tr.v2.p1[0]) * 512 + 512)
-        y2 = int(-(tr.v2.p1[1]) * 384 + 384)
-        x3 = int((tr.v3.p1[0]) * 512 + 512)
-        y3 = int(-(tr.v3.p1[1]) * 384 + 384)
+        x1 = int((tr.v1.p1[0])*400+400)
+        y1 = int(-(tr.v1.p1[1])*300+300)
+        x2 = int((tr.v2.p1[0]) * 400 + 400)
+        y2 = int(-(tr.v2.p1[1]) * 300 + 300)
+        x3 = int((tr.v3.p1[0]) * 400 + 400)
+        y3 = int(-(tr.v3.p1[1]) * 300 + 300)
         self.points=((x1,y1), (x2,y2), (x3,y3))
 
 
     def interpolate(self, p):
-        p1 = (p[0]/float(512)-1, 1-(p[1]/float(384)))
+        p1 = (p[0]/float(400)-1, 1-(p[1]/float(300)))
         xVertex = self.currTriangle.getBestScaleVertex(0)
         yVertex = self.currTriangle.getBestScaleVertex(1)
         xscale =float(xVertex.t[0])/float(xVertex.p1[0])

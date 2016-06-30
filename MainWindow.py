@@ -7,8 +7,8 @@ from Drawer import Drawer
 
 class MainWindow(Tk.Tk):
 
-    WIDTH = 1024
-    HEIGHT = 768
+    WIDTH = 800
+    HEIGHT = 600
 
     def __init__(self):
         Tk.Tk.__init__(self)
@@ -28,10 +28,6 @@ class MainWindow(Tk.Tk):
 
     def getfilechooseoptions(self):
         options = {}
-        options['defaultextension'] = '.jpg'
-        options['filetypes'] = [('jpg files', '.jpg'), ('all files', '.*')]
-        options['initialdir'] = 'C:\\'
-        options['title'] = 'Choose an image'
         return options
 
     def initialize(self):
